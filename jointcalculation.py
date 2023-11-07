@@ -2,21 +2,23 @@ import math
 import random
 from colorama import Fore
 
-r1 = 5
-r2 = 5
-r3 = 5
+r1 = 5 #Length of segment 1 of the arm (between joints a and b (1 and 2))
+r2 = 5 #Length of segment 2 of the arm (between joints b and c (2 and 3))
+r3 = 5 #Length of segment 3 of the arm (between joints c (3) and end effector)
 x_dist = 6
 y_dist = 4
 step = 2 #359*step|| used to determine the number of points to check
+bypass = 1 #switch to  a value >= 4 to bypass filter
 
 def calculateab(locx, locy, o):
-    b = math.acos((locx**2 + locy**2 - r1**2 - r2**2) / (2*r1*r2))#(r1**2+r2**2)
+    b = math.acos((locx**2 + locy**2 - r1**2 - r2**2) / (r1**2+r2**2))#(r1**2+r2**2)            (2*r1*r2)
+    #print("b:", b)
     bt = math.degrees(b)
-    if bt >= -90 and bt <=90:
+    if bt >= -90*bypass and bt <=90*bypass:
         a = math.atan(locx/locy)-math.atan((r2*math.sin(b))/(r1+(r2*math.cos(b))))
+        #print("a:", a)
         at = math.degrees(a)
-        if at >= -90 and at <=90:
-            c_test = math.degrees(math.asin(locy/r3))
+        if at >= -90*bypass and at <=90*bypass:
             ys = (((locy-r1*math.cos(a))/(locx-r1*math.sin(a)))*(x_dist-r1*math.sin(a))+r1*math.cos(a)) #equation of the line from r2
             ds = math.sqrt((x_dist-locx)**2 + (ys-locy)**2) #side 1
             ds3 = abs(ys-y_dist) #side 3
@@ -26,7 +28,7 @@ def calculateab(locx, locy, o):
               #  print(o, "Uncertain", x_dist,locx)
                # print(at,bt,c, "or", cp)
             #if c >= -90 and c <=90:
-            print(Fore.GREEN + "Point on circle (angle degrees):", o)
+            print(Fore.GREEN + "Point on circle (angle degrees):", o, "location:", locx, locy)
             print(Fore.RESET + "Degrees:",at,bt,c, "Radians:", a, b, c)
 
 def choosepos():
@@ -38,7 +40,8 @@ def choosepos():
         #print(joint3loc)
         try:
             calculateab(joint3loc[0], joint3loc[1],i/step)
-        except Exception:
+        except Exception as f:
+            #print(f)
+            #print(Fore.RED + "OUT OF RANGE", i/step, joint3loc[0], joint3loc[1])
             continue
-            #print("OUT OF RANGE")
 choosepos()
