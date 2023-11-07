@@ -28,13 +28,13 @@ def calculateab(locx, locy, o):
             ds3 = abs(ys-y_dist) #side 3
             c = math.degrees(math.acos((ds**2+r3**2-ds3**2)/(2*ds*r3))) #Cosine rule
             if x_dist < locx:
-                cp = 180-c
+                cp = c-180
                 if nocolor == 0:
                     print(Fore.RED + "Uncertain", o)
                     print(Fore.RESET + "",at,bt,c, "or", cp)
                 else:
                     print("Uncertain", o)
-                    print(at,bt,c, "or", cp)
+                    print(at,bt,cp)
             elif c >= -90 and c <=90:
                 if nocolor == 0:
                     print(Fore.GREEN + "Point on circle (angle degrees):", o, "location:", locx, locy)
