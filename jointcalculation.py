@@ -23,13 +23,13 @@ def calculateab(locx, locy, o):
             ds = math.sqrt((x_dist-locx)**2 + (ys-locy)**2) #side 1
             ds3 = abs(ys-y_dist) #side 3
             c = math.degrees(math.acos((ds**2+r3**2-ds3**2)/(2*ds*r3))) #Cosine rule
-            #if x_dist < locx:
-             #   cp = 180-c
-              #  print(o, "Uncertain", x_dist,locx)
-               # print(at,bt,c, "or", cp)
-            #if c >= -90 and c <=90:
-            print(Fore.GREEN + "Point on circle (angle degrees):", o, "location:", locx, locy)
-            print(Fore.RESET + "Degrees:",at,bt,c, "Radians:", a, b, c)
+            if x_dist < locx:
+                cp = 180-c
+                print(Fore.RED + "Uncertain", o)
+                print(Fore.RESET + "",at,bt,c, "or", cp)
+            elif c >= -90 and c <=90:
+                print(Fore.GREEN + "Point on circle (angle degrees):", o, "location:", locx, locy)
+                print(Fore.RESET + "Degrees:",at,bt,c, "Radians:", a, b, c)
 
 def choosepos():
     #angle = random.randrange(0,359,1)
