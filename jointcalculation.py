@@ -13,29 +13,31 @@ x_dist = 6
 y_dist = 4
 step = 2 #359*step|| used to determine the number of points to check
 bypass = 1 #switch to  a value >= 4 to bypass filter
+_range = [-90, 90] #angle ranges (anything outside the range is filtered out (as long as bypass = 1))
 
 def calculateab(locx, locy, o):
     b = math.acos((locx**2 + locy**2 - r1**2 - r2**2) / (r1**2+r2**2))#(r1**2+r2**2)            (2*r1*r2)
     #print("b:", b)
     bt = math.degrees(b)
-    if bt >= -90*bypass and bt <=90*bypass:
+    if bt >= _range[0]*bypass and bt <=_range[1]*bypass:
         a = math.atan(locx/locy)-math.atan((r2*math.sin(b))/(r1+(r2*math.cos(b))))
         #print("a:", a)
         at = math.degrees(a)
-        if at >= -90*bypass and at <=90*bypass:
+        if at >= _range[0]*bypass and at <=_range[1]*bypass:
             ys = (((locy-r1*math.cos(a))/(locx-r1*math.sin(a)))*(x_dist-r1*math.sin(a))+r1*math.cos(a)) #equation of the line from r2
             ds = math.sqrt((x_dist-locx)**2 + (ys-locy)**2) #side 1
             ds3 = abs(ys-y_dist) #side 3
             c = math.degrees(math.acos((ds**2+r3**2-ds3**2)/(2*ds*r3))) #Cosine rule
             if x_dist < locx:
                 cp = c-180
-                if nocolor == 0:
-                    print(Fore.RED + "Uncertain", o)
-                    print(Fore.RESET + "",at,bt,c, "or", cp)
-                else:
-                    print("Uncertain", o)
-                    print(at,bt,cp)
-            elif c >= -90 and c <=90:
+                if cp >= _range[0]*bypass and cp <= _range[1]*bypass:
+                    if nocolor == 0:
+                        print(Fore.RED + "Additional", o) #Uncertain has been updated to "Additional"
+                        print(Fore.RESET + "",at,bt,c, "or", cp)
+                    else:
+                        print("Additional", o)
+                        print(at,bt,cp)
+            elif c >= _range[0] and c <=_range[1]:
                 if nocolor == 0:
                     print(Fore.GREEN + "Point on circle (angle degrees):", o, "location:", locx, locy)
                     print(Fore.RESET + "Degrees:",at,bt,c, "Radians:", a, b, c)
