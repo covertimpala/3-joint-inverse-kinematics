@@ -1,6 +1,10 @@
 import math
 import random
-from colorama import Fore
+try:
+    from colorama import Fore
+    nocolor = 0
+except Exception:
+    nocolor = 1
 
 r1 = 5 #Length of segment 1 of the arm (between joints a and b (1 and 2))
 r2 = 5 #Length of segment 2 of the arm (between joints b and c (2 and 3))
@@ -25,11 +29,19 @@ def calculateab(locx, locy, o):
             c = math.degrees(math.acos((ds**2+r3**2-ds3**2)/(2*ds*r3))) #Cosine rule
             if x_dist < locx:
                 cp = 180-c
-                print(Fore.RED + "Uncertain", o)
-                print(Fore.RESET + "",at,bt,c, "or", cp)
+                if nocolor == 0:
+                    print(Fore.RED + "Uncertain", o)
+                    print(Fore.RESET + "",at,bt,c, "or", cp)
+                else:
+                    print("Uncertain", o)
+                    print(at,bt,c, "or", cp)
             elif c >= -90 and c <=90:
-                print(Fore.GREEN + "Point on circle (angle degrees):", o, "location:", locx, locy)
-                print(Fore.RESET + "Degrees:",at,bt,c, "Radians:", a, b, c)
+                if nocolor == 0:
+                    print(Fore.GREEN + "Point on circle (angle degrees):", o, "location:", locx, locy)
+                    print(Fore.RESET + "Degrees:",at,bt,c, "Radians:", a, b, c)
+                else:
+                    print("Point on circle (angle degrees):", o, "location:", locx, locy)
+                    print("Degrees:",at,bt,c, "Radians:", a, b, c)
 
 def choosepos():
     #angle = random.randrange(0,359,1)
