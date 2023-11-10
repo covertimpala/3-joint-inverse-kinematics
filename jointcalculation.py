@@ -1,5 +1,4 @@
 import math
-import random
 try:
     from colorama import Fore
     nocolor = 0
@@ -14,8 +13,9 @@ y_dist = 4
 step = 2 #359*step|| used to determine the number of points to check
 bypass = 1 #switch to  a value >= 4 to bypass filter
 _range = [-90, 90] #angle ranges (anything outside the range is filtered out (as long as bypass = 1))
+#Degorrad = "deg" # choose between "deg" or "rad" (degrees or radians for output)
 
-def calculateab(locx, locy, o):
+def calculateab(locx, locy, o, r1, r2, r3, _range, bypass):
     b = math.acos((locx**2 + locy**2 - r1**2 - r2**2) / (r1**2+r2**2))#(r1**2+r2**2)            (2*r1*r2)
     #print("b:", b)
     bt = math.degrees(b)
@@ -40,12 +40,12 @@ def calculateab(locx, locy, o):
             elif c >= _range[0] and c <=_range[1]:
                 if nocolor == 0:
                     print(Fore.GREEN + "Point on circle (angle degrees):", o, "location:", locx, locy)
-                    print(Fore.RESET + "Degrees:",at,bt,c, "Radians:", a, b, c)
+                    print(Fore.RESET + "Degrees:",at,bt,c)
                 else:
                     print("Point on circle (angle degrees):", o, "location:", locx, locy)
-                    print("Degrees:",at,bt,c, "Radians:", a, b, c)
+                    print("Degrees:",at,bt,c)
 
-def choosepos():
+def choosepos(segment1, segment2, segment3, x_dist, y_dist, step, _range, bypass):
     #angle = random.randrange(0,359,1)
     for i in range(359*step):
         x_p = r3*math.cos(math.radians(i/step))#r3*math.cos(math.radians(i))
@@ -53,9 +53,9 @@ def choosepos():
         joint3loc = [x_dist+x_p, y_dist+y_p]
         #print(joint3loc)
         try:
-            calculateab(joint3loc[0], joint3loc[1],i/step)
+            calculateab(joint3loc[0], joint3loc[1],i/step, segment1, segment2, segment3, _range, bypass)
         except Exception as f:
             #print(f)
             #print(Fore.RED + "OUT OF RANGE", i/step, joint3loc[0], joint3loc[1])
             continue
-choosepos()
+choosepos(r1, r2, r3, x_dist, y_dist, step, _range, bypass)
