@@ -58,4 +58,15 @@ def choosepos(segment1, segment2, segment3, x_dist, y_dist, step, _range, bypass
             #print(f)
             #print(Fore.RED + "OUT OF RANGE", i/step, joint3loc[0], joint3loc[1])
             continue
-choosepos(r1, r2, r3, x_dist, y_dist, step, _range, bypass)
+
+destination = [5,2]
+currpos = [3,4]
+steps = 200
+angc = 50
+path = [destination[0] - currpos[0], destination[1] - currpos[1]]
+for x in range(steps):
+    xstep = path[0]/steps
+    ystep = path[1]/steps
+    currpos[0] = currpos[0]+xstep
+    currpos[1] = currpos[1]+ystep
+    choosepos(r1, r2, r3, currpos[0], currpos[1], step, _range, bypass)
