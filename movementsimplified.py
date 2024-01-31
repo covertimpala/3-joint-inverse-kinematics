@@ -96,9 +96,9 @@ if abcang != "out of range":
     a_mstp = (abcang[0] - dan_a)/steps
     b_mstp = (abcang[1] - dan_b)/steps
     c_mstp = (abcang[2] - dan_c)/steps
-    for i in range(steps):
-        if i != 0:
-            dan_a = dan_a + a_mstp
-            dan_b = dan_b + b_mstp
-            dan_c = dan_c + c_mstp
-            print(dan_a, dan_b, dan_c)
+    for i in range(steps-1):
+        #if i != 0:
+        dan_a = dan_a + a_mstp
+        dan_b = dan_b + b_mstp
+        dan_c = dan_c + c_mstp
+        print(dan_a, dan_b, dan_c)
