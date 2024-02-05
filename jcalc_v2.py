@@ -100,9 +100,14 @@ print(offstx, offsty)
 abcang = choosepos(r1, r2, r3, destination[0], destination[1], step, _range, bypass, offstx, offsty, False, 1)
 print(abcang)
 if abcang != "out of range":
-    multiprocessing.Process(target=spdcntrl,args=[1,200,(abcang[0])]) # +- 90
-    multiprocessing.Process(target=spdcntrl,args=[2,200,(abcang[1])]) # +- 90
-    multiprocessing.Process(target=spdcntrl,args=[3,200,(abcang[2])]) # +- 90
+    m1 = multiprocessing.Process(target=spdcntrl,args=[1,200,(abcang[0])]) # +- 90
+    m2 = multiprocessing.Process(target=spdcntrl,args=[2,200,(abcang[1])]) # +- 90
+    m3 = multiprocessing.Process(target=spdcntrl,args=[3,200,(abcang[2])]) # +- 90
+    if __name__ == '__main__':
+        m1.start()
+        m2.start()
+        m3.start()
+    print("moving to point")
 else:
     print(Fore.CYAN + "Check for closest match? (y/n)")
     print("(this will shift the locked segment)")
@@ -117,9 +122,14 @@ else:
                 va = choosepos(r1, r2, r3, destination[0], destination[1], step, _range, bypass, offstx, offsty, True, z)
                 print(va)
                 if va != "out of range":
-                    multiprocessing.Process(target=spdcntrl,args=[1,200,(va[0])]) # +- 90
-                    multiprocessing.Process(target=spdcntrl,args=[2,200,(va[1])]) # +- 90
-                    multiprocessing.Process(target=spdcntrl,args=[3,200,(va[2])]) # +- 90
+                    m1 = multiprocessing.Process(target=spdcntrl,args=[1,200,(va[0])]) # +- 90
+                    m2 = multiprocessing.Process(target=spdcntrl,args=[2,200,(va[1])]) # +- 90
+                    m3 = multiprocessing.Process(target=spdcntrl,args=[3,200,(va[2])]) # +- 90
+                    if __name__ == '__main__':
+                        m1.start()
+                        m2.start()
+                        m3.start()
+                    print("moving to point")
             else:
                 print(Fore.RED + "no solution" + Fore.RESET)
         else:
