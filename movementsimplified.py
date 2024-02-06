@@ -51,7 +51,7 @@ def calculateab(locx, locy, o, r1, r2, r3, _range, bypass, x_dist, y_dist):
                         print(at,bt,cp)
                         return [at, bt, c, "a"]
                 else:
-                    print(Fore.RED + "angle out of range" + Fore.RESET)
+                    #print(Fore.RED + "angle out of range" + Fore.RESET)
                     return ("out of range")
             elif c >= _range[4] and c <=_range[5]:
                 if nocolor == 0:
@@ -63,21 +63,21 @@ def calculateab(locx, locy, o, r1, r2, r3, _range, bypass, x_dist, y_dist):
                     print("Degrees:",at,bt,c)
                     return [at, bt, c, ""]
         else:
-            print(Fore.RED + "angle out of range" + Fore.RESET)
+            #print(Fore.RED + "angle out of range" + Fore.RESET)
             return ("out of range")
     else:
-        print(Fore.RED + "angle out of range" + Fore.RESET)
+        #print(Fore.RED + "angle out of range" + Fore.RESET)
         #print()
         return ("out of range")
 
 def choosepos(segment1, segment2, segment3, x_dist, y_dist, step, _range, bypass, offstx_, offsty_, simpl, z):
     if simpl == False:
-        x_p = x_dist+offstx_
-        y_p = y_dist+offsty_
+        x_p = offstx_
+        y_p = offsty_
     else:
         x_p = r3*math.cos(math.radians(z/step))#r3*math.cos(math.radians(i))
         y_p = r3*math.sin(math.radians(z/step))#r3*math.sin(math.radians(i))
-    joint3loc = [x_p, y_p]
+    joint3loc = [x_dist+x_p, y_dist+y_p]
     try:
         return(calculateab(joint3loc[0], joint3loc[1],"", segment1, segment2, segment3, _range, bypass, x_dist, y_dist))
     except Exception as f:
@@ -118,27 +118,10 @@ else:
     an_s = input()
     if an_s == "y" or an_s == "yes":
         print(Fore.GREEN + "finding closest match" + Fore.RESET)
-        thetax = round(math.degrees(math.asin(offstx/r3)),5)
-        thetay = round(math.degrees(math.acos(offsty/r3)),5)
-        print(thetax, thetay)
-        if abs(thetax) == abs(thetay):
-            for z in range(359*step):
-                va = choosepos(r1, r2, r3, destination[0], destination[1], step, _range, bypass, offstx, offsty, True, z)
-                print(va)
-                if va != "out of range":
-                    dan_a = math.degrees(an_a)
-                    dan_b = math.degrees(an_b)
-                    dan_c = math.degrees(an_c)
-                    a_mstp = (va[0] - dan_a)/steps
-                    b_mstp = (va[1] - dan_b)/steps
-                    c_mstp = (va[2] - dan_c)/steps
-                    for i in range(steps-1):
-                        #if i != 0:
-                        dan_a = dan_a + a_mstp
-                        dan_b = dan_b + b_mstp
-                        dan_c = dan_c + c_mstp
-                        print(dan_a, dan_b, dan_c)
-            else:
-                print(Fore.RED + "no solution" + Fore.RESET)
-        else:
-            print(Fore.RED + "Something went wrong" + Fore.RESET)
+        #print(chsp(r1, r2, r3, x_dist, y_dist, step, _range, bypass, ))
+        liovar = {}
+        for z in range(359*step):
+            va = choosepos(r1, r2, r3, destination[0], destination[1], step, _range, bypass, offstx, offsty, True, z)
+            if va != "out of range" and va != None:
+                liovar[z] = va
+        print(liovar)
