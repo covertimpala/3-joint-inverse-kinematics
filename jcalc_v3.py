@@ -85,10 +85,10 @@ def choosepos(segment1, segment2, segment3, x_dist, y_dist, step, _range, bypass
         #print(Fore.RED + "OUT OF RANGE", i/step, joint3loc[0], joint3loc[1])
         #continue
 
-an_a = math.radians(50)
-an_b = math.radians(50)
-an_c = math.radians(23)
-destination = [5,6]
+an_a = math.radians(kit.servo[1].angle)
+an_b = math.radians(kit.servo[2].angle)
+an_c = math.radians(kit.servo[3].angle)
+destination = [5,5]
 currpos = [r1*math.sin(an_a)+r2*math.sin(an_a+an_b)+r3*math.sin(an_a+an_b+an_c),r1*math.cos(an_a)+r2*math.cos(an_a+an_b)+r3*math.cos(an_a+an_b+an_c)]
 steps = 200
 path = [destination[0] - currpos[0], destination[1] - currpos[1]]
@@ -103,15 +103,15 @@ if abcang != "out of range":
     dan_a = math.degrees(an_a)
     dan_b = math.degrees(an_b)
     dan_c = math.degrees(an_c)
-    a_mstp = (abcang[0] - dan_a)/steps
-    b_mstp = (abcang[1] - dan_b)/steps
-    c_mstp = (abcang[2] - dan_c)/steps
-    for i in range(steps-1):
-        #if i != 0:
-        dan_a = dan_a + a_mstp
-        dan_b = dan_b + b_mstp
-        dan_c = dan_c + c_mstp
-        print(dan_a, dan_b, dan_c)
+    m1 = multiprocessing.Process(target=spdcntrl,args=[1,200,(abcang[0])]) # +- 90
+    m2 = multiprocessing.Process(target=spdcntrl,args=[2,200,(abcang[1])]) # +- 90
+    m3 = multiprocessing.Process(target=spdcntrl,args=[3,200,(abcang[2])])
+    if __name__ == '__main__':
+        m1.start()
+        m2.start()
+        m3.start()
+    print("moving to point")
+
 else:
     print(Fore.CYAN + "Check for closest match? (y/n)")
     print("(this will shift the locked segment)")
@@ -140,6 +140,15 @@ else:
             if abs(ck_) < abs(cv):
                 cv = ck_
                 ck = liovar[p][0]
+                pval = p
         print(sol)
         print(ck)
         print(ck_)
+        m1 = multiprocessing.Process(target=spdcntrl,args=[1,200,(liovar[pval][1][0])]) # +- 90
+        m2 = multiprocessing.Process(target=spdcntrl,args=[2,200,(liovar[pval][1][1])]) # +- 90
+        m3 = multiprocessing.Process(target=spdcntrl,args=[3,200,(liovar[pval][1][2])]) # +- 90
+        if __name__ == '__main__':
+            m1.start()
+            m2.start()
+            m3.start()
+        print("moving to point")
