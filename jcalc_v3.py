@@ -1,15 +1,14 @@
 import math
+import multiprocessing
 try:
     from colorama import Fore
     nocolor = 0
 except Exception:
     nocolor = 1
 
-r1 = 5 #Length of segment 1 of the arm (between joints a and b (1 and 2))
-r2 = 5 #Length of segment 2 of the arm (between joints b and c (2 and 3))
-r3 = 2.8 #Length of segment 3 of the arm (between joints c (3) and end effector)
-x_dist = 3.3
-y_dist = 6.2
+r1 = 15 #Length of segment 1 of the arm (between joints a and b (1 and 2))
+r2 = 7.9 #Length of segment 2 of the arm (between joints b and c (2 and 3))
+r3 = 14.5 #Length of segment 3 of the arm (between joints c (3) and end effector)
 step = 2 #359*step|| used to determine the number of points to check
 bypass = 1 #switch to  a value >= 4 to bypass filter
 _range = [-90, 90, -90, 90, -90, 90] #angle ranges (anything outside the range is filtered out (as long as bypass = 1)) (a,a,b,b,c,c)
@@ -100,9 +99,6 @@ print(offstx, offsty)
 abcang = choosepos(r1, r2, r3, destination[0], destination[1], step, _range, bypass, offstx, offsty, False, 1)
 print(abcang)
 if abcang != "out of range":
-    dan_a = math.degrees(an_a)
-    dan_b = math.degrees(an_b)
-    dan_c = math.degrees(an_c)
     m1 = multiprocessing.Process(target=spdcntrl,args=[1,200,(abcang[0])]) # +- 90
     m2 = multiprocessing.Process(target=spdcntrl,args=[2,200,(abcang[1])]) # +- 90
     m3 = multiprocessing.Process(target=spdcntrl,args=[3,200,(abcang[2])])
