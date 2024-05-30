@@ -5,23 +5,23 @@ try:
 except Exception:
     nocolor = 1
 
-r1 = 5 #Length of segment 1 of the arm (between joints a and b (1 and 2))
-r2 = 5 #Length of segment 2 of the arm (between joints b and c (2 and 3))
-r3 = 2.8 #Length of segment 3 of the arm (between joints c (3) and end effector)
-x_dist = 3.3
-y_dist = 6.2
+r1 = 15 #Length of segment 1 of the arm (between joints a and b (1 and 2))
+r2 = 7.9 #Length of segment 2 of the arm (between joints b and c (2 and 3))
+r3 = 14.5 #Length of segment 3 of the arm (between joints c (3) and end effector)
+x_dist = 18
+y_dist = 20
 step = 2 #359*step|| used to determine the number of points to check
-bypass = 1 #switch to  a value >= 4 to bypass filter
+bypass = 5 #switch to  a value >= 4 to bypass filter
 _range = [-90, 90] #angle ranges (anything outside the range is filtered out (as long as bypass = 1))
 #Degorrad = "deg" # choose between "deg" or "rad" (degrees or radians for output)
 
 def calculateab(locx, locy, o, r1, r2, r3, _range, bypass):
-    b = math.acos((locx**2 + locy**2 - r1**2 - r2**2) / (r1**2+r2**2))#(r1**2+r2**2)            (2*r1*r2)
-    #print("b:", b)
+    b = math.pi - math.acos((-locx**2 - locy**2 + r1**2 + r2**2) / (2*r1*r2))#(r1**2+r2**2)            (2*r1*r2)
+    print("b:", b)
     bt = math.degrees(b)
     if bt >= _range[0]*bypass and bt <=_range[1]*bypass:
-        a = math.atan(locx/locy)-math.atan((r2*math.sin(b))/(r1+(r2*math.cos(b))))
-        #print("a:", a)
+        a = -math.asin((r2*math.sin(b))/((locx**2 + locy**2)**(1/2)))+math.asin((locx)/((locx**2 + locy**2)**(1/2)))
+        print("a:", a)
         at = math.degrees(a)
         if at >= _range[0]*bypass and at <=_range[1]*bypass:
             ys = (((locy-r1*math.cos(a))/(locx-r1*math.sin(a)))*(x_dist-r1*math.sin(a))+r1*math.cos(a)) #equation of the line from r2
@@ -48,6 +48,7 @@ def calculateab(locx, locy, o, r1, r2, r3, _range, bypass):
 def choosepos(segment1, segment2, segment3, x_dist, y_dist, step, _range, bypass, ):
     #angle = random.randrange(0,359,1)
     for i in range(359*step):
+       #print(i/step)
         x_p = r3*math.cos(math.radians(i/step))#r3*math.cos(math.radians(i))
         y_p = r3*math.sin(math.radians(i/step))#r3*math.sin(math.radians(i))
         joint3loc = [x_dist+x_p, y_dist+y_p]

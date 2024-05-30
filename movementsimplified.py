@@ -5,13 +5,13 @@ try:
 except Exception:
     nocolor = 1
 
-r1 = 5 #Length of segment 1 of the arm (between joints a and b (1 and 2))
-r2 = 5 #Length of segment 2 of the arm (between joints b and c (2 and 3))
-r3 = 2.8 #Length of segment 3 of the arm (between joints c (3) and end effector)
-x_dist = 3.3
-y_dist = 6.2
+r1 = 15 #Length of segment 1 of the arm (between joints a and b (1 and 2))
+r2 = 7.9 #Length of segment 2 of the arm (between joints b and c (2 and 3))
+r3 = 14.5 #Length of segment 3 of the arm (between joints c (3) and end effector)
+x_dist = 18
+y_dist = 20
 step = 2 #359*step|| used to determine the number of points to check
-bypass = 1 #switch to  a value >= 4 to bypass filter
+bypass = 4 #switch to  a value >= 4 to bypass filter
 _range = [-90, 90, -90, 90, -90, 90] #angle ranges (anything outside the range is filtered out (as long as bypass = 1)) (a,a,b,b,c,c)
 #Degorrad = "deg" # choose between "deg" or "rad" (degrees or radians for output)
 
@@ -27,11 +27,12 @@ _range = [-90, 90, -90, 90, -90, 90] #angle ranges (anything outside the range i
 
 
 def calculateab(locx, locy, o, r1, r2, r3, _range, bypass, x_dist, y_dist):
-    b = math.acos((locx**2 + locy**2 - r1**2 - r2**2) / (r1**2+r2**2))#(r1**2+r2**2)            (2*r1*r2)
-    #print("b:", b)
+    print((-locx**2 - locy**2 + r1**2 + r2**2) / (2*r1*r2))
+    b = math.pi - math.acos((-locx**2 - locy**2 + r1**2 + r2**2) / (2*r1*r2))#(r1**2+r2**2)            (2*r1*r2)
+    print("b:", b)
     bt = math.degrees(b)
     if bt >= _range[2]*bypass and bt <=_range[3]*bypass:
-        a = math.atan(locx/locy)-math.atan((r2*math.sin(b))/(r1+(r2*math.cos(b))))
+        a = -math.asin((r2*math.sin(b))/(math.sqrt(locx**2 + locy**2)))+math.asin((locx)/(math.sqrt(locx**2 + locy**2)))
         #print("a:", a)
         at = math.degrees(a)
         if at >= _range[0]*bypass and at <=_range[1]*bypass:
@@ -78,6 +79,7 @@ def choosepos(segment1, segment2, segment3, x_dist, y_dist, step, _range, bypass
         x_p = r3*math.cos(math.radians(z/step))#r3*math.cos(math.radians(i))
         y_p = r3*math.sin(math.radians(z/step))#r3*math.sin(math.radians(i))
     joint3loc = [x_dist+x_p, y_dist+y_p]
+    print(joint3loc[0], joint3loc[1],"", segment1, segment2, segment3, _range, bypass, x_dist, y_dist)
     try:
         return(calculateab(joint3loc[0], joint3loc[1],"", segment1, segment2, segment3, _range, bypass, x_dist, y_dist))
     except Exception as f:
@@ -88,7 +90,7 @@ def choosepos(segment1, segment2, segment3, x_dist, y_dist, step, _range, bypass
 an_a = math.radians(50)
 an_b = math.radians(50)
 an_c = math.radians(23)
-destination = [5,6]
+destination = [18,20]
 currpos = [r1*math.sin(an_a)+r2*math.sin(an_a+an_b)+r3*math.sin(an_a+an_b+an_c),r1*math.cos(an_a)+r2*math.cos(an_a+an_b)+r3*math.cos(an_a+an_b+an_c)]
 steps = 200
 path = [destination[0] - currpos[0], destination[1] - currpos[1]]
@@ -125,7 +127,7 @@ else:
             if va != "out of range" and va != None:
                 liovar[len(liovar)] = z,va
         print(liovar)
-        print(liovar[1][0])
+        #print(liovar[1][0])
         cv = -5
         thetax = round(math.asin(offstx/r3),5)
         thetay = round(math.acos(offsty/r3),5)
