@@ -27,9 +27,9 @@ _range = [-90, 90, -90, 90, -90, 90] #angle ranges (anything outside the range i
 
 
 def calculateab(locx, locy, o, r1, r2, r3, _range, bypass, x_dist, y_dist):
-    print((-locx**2 - locy**2 + r1**2 + r2**2) / (2*r1*r2))
+    #print((-locx**2 - locy**2 + r1**2 + r2**2) / (2*r1*r2))
     b = math.pi - math.acos((-locx**2 - locy**2 + r1**2 + r2**2) / (2*r1*r2))#(r1**2+r2**2)            (2*r1*r2)
-    print("b:", b)
+    #print("b:", b)
     bt = math.degrees(b)
     if bt >= _range[2]*bypass and bt <=_range[3]*bypass:
         a = -math.asin((r2*math.sin(b))/(math.sqrt(locx**2 + locy**2)))+math.asin((locx)/(math.sqrt(locx**2 + locy**2)))
@@ -79,17 +79,18 @@ def choosepos(segment1, segment2, segment3, x_dist, y_dist, step, _range, bypass
         x_p = r3*math.cos(math.radians(z/step))#r3*math.cos(math.radians(i))
         y_p = r3*math.sin(math.radians(z/step))#r3*math.sin(math.radians(i))
     joint3loc = [x_dist+x_p, y_dist+y_p]
-    print(joint3loc[0], joint3loc[1],"", segment1, segment2, segment3, _range, bypass, x_dist, y_dist)
+    #print("-==-", joint3loc[0], joint3loc[1],"", segment1, segment2, segment3, _range, bypass, x_dist, y_dist)
     try:
         return(calculateab(joint3loc[0], joint3loc[1],"", segment1, segment2, segment3, _range, bypass, x_dist, y_dist))
     except Exception as f:
-        print("failed:", f)
+        #print("failed:", f)
         #print(Fore.RED + "OUT OF RANGE", i/step, joint3loc[0], joint3loc[1])
         #continue
+        return(None)
 
-an_a = math.radians(50)
+an_a = math.radians(30)
 an_b = math.radians(50)
-an_c = math.radians(23)
+an_c = math.radians(50)
 destination = [18,20]
 currpos = [r1*math.sin(an_a)+r2*math.sin(an_a+an_b)+r3*math.sin(an_a+an_b+an_c),r1*math.cos(an_a)+r2*math.cos(an_a+an_b)+r3*math.cos(an_a+an_b+an_c)]
 steps = 200
@@ -100,8 +101,9 @@ offsty = -r3*math.cos(an_a+an_b+an_c) #currpos[1]-r3*math.cos(an_c)
 print(offstx, offsty)
 
 abcang = choosepos(r1, r2, r3, destination[0], destination[1], step, _range, bypass, offstx, offsty, False, 1)
+#        choosepos(r1, r2, r3, destination[0], destination[1], step, _range, bypass)
 print(abcang)
-if abcang != "out of range":
+if abcang != "out of range" and abcang != None:
     dan_a = math.degrees(an_a)
     dan_b = math.degrees(an_b)
     dan_c = math.degrees(an_c)
@@ -136,8 +138,13 @@ else:
             sol = math.degrees(abs(thetax))
         else:
             print("Something went wrong")
+        global ck_
+        global ck
+        ck = 0
+        
         for p in range(len(liovar)):
-            print(p)
+            #print(p)
+            
             ck_ = liovar[p][0]/sol
             if abs(ck_) < abs(cv):
                 cv = ck_
